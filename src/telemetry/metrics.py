@@ -25,12 +25,27 @@ class PerformanceTracker:
         self.session_metrics.append(metric)
         logger.log_event("LLM_METRIC", metric)
 
+    # Public pricing, USD per 1K tokens, as (prompt, completion).
+    # Local/mock models are free. Unknown models fall back to a flat estimate.
+    PRICING = {
+        "gpt-4o": (0.005, 0.015),
+        "gpt-4o-mini": (0.00015, 0.0006),
+        "gemini-1.5-flash": (0.000075, 0.0003),
+        "gemini-1.5-pro": (0.00125, 0.005),
+    }
+
     def _calculate_cost(self, model: str, usage: Dict[str, int]) -> float:
-        """
-        TODO: Implement real pricing logic.
-        For now, returns a dummy constant.
-        """
-        return (usage.get("total_tokens", 0) / 1000) * 0.01
+        """Estimate request cost in USD from per-1K-token public pricing."""
+        prompt_t = usage.get("prompt_tokens", 0)
+        completion_t = usage.get("completion_tokens", 0)
+
+        # Free local / mock models.
+        if model in ("mock-react-1",) or model.endswith(".gguf"):
+            return 0.0
+
+        in_rate, out_rate = self.PRICING.get(model, (0.001, 0.002))  # fallback
+        cost = (prompt_t / 1000) * in_rate + (completion_t / 1000) * out_rate
+        return round(cost, 6)
 
 # Global tracker instance
 tracker = PerformanceTracker()

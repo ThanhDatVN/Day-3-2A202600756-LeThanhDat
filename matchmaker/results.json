@@ -1,0 +1,104 @@
+[
+  {
+    "type": "flag",
+    "profile_id": "P17",
+    "reason": "Đã thử nhiều ứng viên nhưng không tìm được cặp phù hợp do khoảng cách địa lý và không đạt tiêu chuẩn đồng điệu cao về sở thích/giá trị/lối sống.",
+    "suggested_action": "Có thể xem xét mở rộng tiêu chí tìm kiếm hơn nữa hoặc chờ thời gian có thêm ứng viên mới.",
+    "relaxations": [
+      {
+        "field": "location",
+        "from": "TP HCM",
+        "to": "any",
+        "reason": "Không tìm thấy ứng viên nào trong khu vực TP HCM."
+      },
+      {
+        "field": "location",
+        "from": "any",
+        "to": "any",
+        "reason": "Cả 2 ứng viên đều ở xa tối đa 960 km."
+      }
+    ]
+  },
+  {
+    "type": "proposal",
+    "profile_id_a": "P27",
+    "profile_id_b": "P36",
+    "match_reason": "Cả hai có chung sở thích nghệ thuật và phong cách sống phóng khoáng, điều này có thể giúp xây dựng một mối quan hệ thú vị và đồng điệu.",
+    "confidence": 0.832,
+    "admin_note": "",
+    "relaxations": [
+      {
+        "field": "location",
+        "from": "Đà Nẵng",
+        "to": "any",
+        "reason": "Nới lỏng tiêu chí để mở rộng tìm kiếm ứng viên."
+      }
+    ]
+  },
+  {
+    "type": "flag",
+    "profile_id": "P39",
+    "reason": "Vượt quá MAX_STEPS=10 chưa tìm được cặp",
+    "suggested_action": "admin xem xét thủ công",
+    "relaxations": [
+      {
+        "field": "location",
+        "from": "Cần Thơ",
+        "to": "any",
+        "reason": "Không có ứng viên nào phù hợp trong cùng tỉnh."
+      },
+      {
+        "field": "age_range",
+        "from": "32-44",
+        "to": "30-46",
+        "reason": "Không có ứng viên nào phù hợp trong khoảng tuổi 32-44."
+      },
+      {
+        "field": "age_range",
+        "from": "30-46",
+        "to": "28-48",
+        "reason": "Không tìm được ứng viên nào phù hợp trong tuổi 30-46."
+      },
+      {
+        "field": "age_range",
+        "from": "28-48",
+        "to": "26-50",
+        "reason": "Vẫn không tìm được ứng viên nào phù hợp trong khoảng tuổi 28-48."
+      }
+    ]
+  },
+  {
+    "type": "flag",
+    "profile_id": "P23",
+    "reason": "Không tìm thấy cặp đôi phù hợp do vi phạm ràng buộc tuổi.",
+    "suggested_action": "Cần xem xét lại tiêu chí ghép hoặc mở rộng tìm kiếm.",
+    "relaxations": [
+      {
+        "field": "age_range",
+        "from": "26-36",
+        "to": "26-36",
+        "reason": "Nới lỏng khoảng tuổi để tìm cặp phù hợp hơn."
+      },
+      {
+        "field": "age_range",
+        "from": "26-40",
+        "to": "26-40",
+        "reason": "Nới lỏng khoảng tuổi thêm để tìm cặp phù hợp."
+      }
+    ]
+  },
+  {
+    "type": "flag",
+    "profile_id": "P37",
+    "reason": "Không tìm thấy cặp phù hợp với tiêu chí similarity và dealbreaker.",
+    "suggested_action": "Xem xét mở rộng tiêu chí tìm kiếm hoặc chờ đợi thêm thời gian.",
+    "relaxations": [
+      {
+        "field": "location",
+        "from": "Huế",
+        "to": "any",
+        "reason": "Không tìm thấy ứng viên ở Huế, cần mở rộng tìm kiếm."
+      }
+    ]
+  }
+]
