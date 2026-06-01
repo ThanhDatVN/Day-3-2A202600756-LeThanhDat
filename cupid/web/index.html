@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cupid AI · Mai mối từ mô tả tự nhiên</title>
+<style>
+  :root{ --indigo:#5b6cff; --indigo-d:#4453e0; --rose:#ff5d8f; --teal:#13b5a6;
+    --bg:#f5f6fb; --card:#fff; --ink:#1f2533; --muted:#7c869b; --line:#e7ebf3; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+  header{background:linear-gradient(120deg,var(--rose),var(--indigo));color:#fff;padding:18px 26px;
+    display:flex;align-items:center;gap:12px;box-shadow:0 2px 14px rgba(80,80,180,.18)}
+  header h1{font-size:20px;margin:0} header .sub{font-size:12px;opacity:.92}
+  main{max-width:880px;margin:22px auto;padding:0 18px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;
+    box-shadow:0 1px 8px rgba(40,60,120,.05);margin-bottom:18px}
+  h2{font-size:15px;margin:0 0 4px;color:var(--indigo-d)} .desc{color:var(--muted);font-size:12.5px;margin:0 0 12px}
+  textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-size:14px;min-height:90px;resize:vertical}
+  button.act{background:var(--indigo);color:#fff;border:0;border-radius:10px;padding:11px 18px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px}
+  button.act:hover{background:var(--indigo-d)} button.act:disabled{opacity:.55;cursor:wait}
+  button.wait{background:var(--teal)} button.ex{font-size:12px;color:var(--muted);background:#eef1fb;border:0;border-radius:18px;padding:5px 11px;margin:0 5px 6px 0;cursor:pointer}
+  .chip{display:inline-block;background:#eef1fb;color:var(--indigo-d);border-radius:8px;padding:5px 10px;margin:3px 6px 3px 0;font-size:12.5px}
+  .banner{background:#fff0f5;border:1px solid #ffd0e0;border-left:4px solid var(--rose);padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:13.5px}
+  .card{border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-bottom:11px;transition:.15s}
+  .card.rejected{opacity:.45;background:#fafafa}
+  .card .head{display:flex;align-items:center;gap:8px}
+  .card .name{font-weight:700;font-size:15px}
+  .badge{font-size:11px;padding:2px 9px;border-radius:20px;background:#eafaf6;color:#0c8a7b;font-weight:700}
+  .meta{color:var(--muted);font-size:12px;margin:2px 0 6px}
+  .bar{background:#eef1f7;border-radius:8px;height:16px;position:relative;overflow:hidden;margin:6px 0}
+  .bar>i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--teal),var(--indigo))}
+  .bar>span{position:absolute;right:8px;top:0;line-height:16px;font-size:10.5px;color:#33405e;font-weight:700}
+  .assess{font-size:13px;margin:3px 0} .advice{font-size:12.5px;color:#0c8a7b;background:#f0fbf9;border-radius:6px;padding:6px 9px;margin-top:4px}
+  .rejbtn{font-size:11.5px;background:#fff0f0;color:#d33;border:0;border-radius:8px;padding:4px 9px;cursor:pointer;font-weight:600;margin-left:6px}
+  .okbtn{font-size:11.5px;background:#eafaf1;color:#0c8a4a;border:0;border-radius:8px;padding:4px 9px;cursor:pointer;font-weight:600;margin-left:6px}
+  .btns{float:right}
+  .contact{display:none;margin-top:8px;background:#eafaf1;border:1px solid #bfe9cf;border-radius:8px;padding:9px 11px;font-size:13.5px;color:#0c6b3a;font-weight:700}
+  .muted{color:var(--muted);font-size:12.5px}
+  .ok{color:#16a34a;font-weight:700}
+</style>
+</head>
+<body>
+<header>
+  <span style="font-size:26px">💘</span>
+  <div><h1>Cupid AI</h1><div class="sub">Tả vài dòng về bạn — AI tự tìm người hợp nhất</div></div>
+</header>
+
+<main>
+  <section class="panel">
+    <h2>Mô tả bản thân bằng lời của bạn</h2>
+    <p class="desc">VD: tên, tuổi, ở đâu, sở thích, và bạn muốn tìm người như thế nào.</p>
+    <div>
+      <button class="ex" onclick="ex('Mình là Hùng, 29 tuổi, nam, ở Hà Nội, mê trekking, chụp ảnh và cà phê. Muốn tìm cô gái yêu thiên nhiên, thích đi phượt.')">Ví dụ 1</button>
+      <button class="ex" onclick="ex('Tôi tên Trang, nữ, 26 tuổi, sống ở TP HCM, thích gym, nấu ăn và đầu tư. Tìm người chững chạc, độc lập tài chính.')">Ví dụ 2</button>
+    </div>
+    <textarea id="nl" placeholder="Nhập mô tả của bạn ở đây…"></textarea>
+    <br><button class="act" id="go" onclick="match()">💞 Tìm người phù hợp</button>
+  </section>
+
+  <section class="panel" id="out" style="display:none">
+    <div id="profile"></div>
+    <div id="hits"></div>
+    <h2 style="margin-top:10px">Top 5 gợi ý cho bạn</h2>
+    <div id="cards"></div>
+    <div id="actions" style="margin-top:6px"></div>
+  </section>
+</main>
+
+<script>
+const $=(id)=>document.getElementById(id);
+let LAST = null;            // {profile, candidates}
+const rejected = new Set();
+
+function ex(t){ $('nl').value=t; }
+async function post(url,body){
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return r.json();
+}
+
+async function match(){
+  const text=$('nl').value.trim(); if(!text) return;
+  const b=$('go'); b.disabled=true; b.textContent='Đang phân tích…';
+  rejected.clear();
+  try{
+    const d=await post('/api/match',{text});
+    LAST=d; render(d);
+    $('out').style.display='block';
+  }catch(e){ alert('Lỗi: '+e); }
+  b.disabled=false; b.textContent='💞 Tìm người phù hợp';
+}
+
+function render(d){
+  const p=d.profile;
+  $('profile').innerHTML=`<div><b>Hồ sơ của bạn (AI trích xuất):</b></div>
+    <span class="chip">${p.name||'—'}</span><span class="chip">${p.age||'?'} tuổi</span>
+    <span class="chip">${p.gender||'?'}</span><span class="chip">${p.address||'?'}</span>
+    <span class="chip">❤ ${p.hobbies||''}</span><span class="chip">🔎 ${p.requirements||''}</span>`;
+
+  $('hits').innerHTML = (d.waitlist_hits && d.waitlist_hits.length)
+    ? `<div class="banner">🎉 Có ${d.waitlist_hits.length} người đang chờ phù hợp với bạn: `
+      + d.waitlist_hits.map(h=>`<b>${h.waiter.name}</b> (${Math.round(h.score*100)}%)`).join(', ')+'</div>'
+    : '';
+
+  $('cards').innerHTML=d.candidates.map(c=>cardHtml(c)).join('');
+  renderActions();
+}
+
+function cardHtml(c){
+  return `<div class="card" id="c-${c.id}">
+    <div class="btns">
+      <button class="okbtn" onclick="accept('${c.id}')">Đồng ý 💚</button>
+      <button class="rejbtn" onclick="toggleReject('${c.id}')">Không phù hợp ✕</button>
+    </div>
+    <div class="head"><span class="name">${c.name}</span>
+      <span class="muted">${c.gender}, ${c.age}, ${c.address}</span>
+      ${c.label?`<span class="badge">${c.label}</span>`:''}</div>
+    <div class="bar"><i style="width:${(c.score*100).toFixed(0)}%"></i><span>${(c.score*100).toFixed(0)}%</span></div>
+    <div class="assess">📝 ${c.assessment||''}</div>
+    <div class="advice">💡 ${c.advice||''}</div>
+    <div class="contact" id="ct-${c.id}"></div>
+  </div>`;
+}
+
+async function accept(id){
+  const d=await post('/api/accept',{candidate_id:id});
+  const ct=$('ct-'+id); ct.style.display='block';
+  ct.innerHTML = d.matched
+    ? `💚 Đã kết nối với <b>${d.name}</b> — 📞 SĐT: <b>${d.phone}</b>`
+    : `⚠️ ${d.error||'Có lỗi xảy ra'}`;
+}
+
+function toggleReject(id){
+  if(rejected.has(id)) rejected.delete(id); else rejected.add(id);
+  const el=$('c-'+id); el.classList.toggle('rejected', rejected.has(id));
+  renderActions();
+}
+
+function renderActions(){
+  const allRejected = LAST.candidates.length>0 && LAST.candidates.every(c=>rejected.has(c.id));
+  $('actions').innerHTML = allRejected
+    ? `<div class="muted">Bạn thấy tất cả gợi ý đều chưa phù hợp.</div>
+       <button class="act wait" onclick="wait()">💾 Lưu hồ sơ & chờ người phù hợp tiếp theo</button>`
+    : `<div class="muted">Nhấn "Không phù hợp" trên các thẻ bạn không thích. Khi loại hết, có thể chọn vào hàng đợi.</div>`;
+}
+
+async function wait(){
+  const d=await post('/api/wait',{profile:LAST.profile, rejected:[...rejected]});
+  $('actions').innerHTML=`<div class="ok">✅ Đã lưu hồ sơ của bạn vào hàng đợi (đang chờ ${d.size} người).
+    Khi có người mới phù hợp xuất hiện, hệ thống sẽ ghép bạn.</div>`;
+}
+</script>
+</body>
+</html>
